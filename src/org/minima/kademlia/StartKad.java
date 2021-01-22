@@ -20,19 +20,18 @@ public class StartKad {
 	
 	
 		try {
-			JKademliaNode kad1 = new JKademliaNode("OwnerName1", new KademliaId("ASF45678947584567463"), 12049);
-		
+			String BootID = "ASF45678947584567463";
+			
+			//BOOTSTRAPPER
+			JKademliaNode kad1 = new JKademliaNode("OwnerName1", new KademliaId(BootID), 12049);
+			
+			//NEW NODE
 			JKademliaNode kad2 = new JKademliaNode("OwnerName2", new KademliaId(), 12057);
-			
 			kad2.bootstrap(kad1.getNode());
-		
-			System.out.println("Network UP");
-			
 			DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "some data");
 			kad2.put(c);
-		
 			KademliaId objkey = c.getKey();
-			System.out.println("KAD2 KEY  : "+objkey);
+//			System.out.println("KAD2 KEY  : "+objkey);
 			
 			
 //			GetParameter gp = new GetParameter(objkey, DHTContentImpl.TYPE);
@@ -47,13 +46,14 @@ public class StartKad {
 //			System.out.println("kad2 : "+kad1);
 			
 			
-			//now create a nide and connect
+			//NEW NODE
 			JKademliaNode kad3 = new JKademliaNode("OwnerName3", new KademliaId(), 12063);
-			
-//			Node boots = new Node(new KademliaId("ASF45678947584567463"), InetAddress.getByName("127.0.0.1"), 12049);
-			Node boots = new Node(new KademliaId(), InetAddress.getByName("127.0.0.1"), 12049);
-			
+			Node boots = new Node(new KademliaId(BootID), InetAddress.getByName("127.0.0.1"), 12049);
 			kad3.bootstrap(boots);
+			
+			//Get a list of contacts..
+			System.out.println("kad3 : "+kad3);
+			
 			
 			GetParameter gp = new GetParameter(objkey, DHTContentImpl.TYPE);
 			JKademliaStorageEntry entry = kad3.get(gp);
@@ -61,6 +61,10 @@ public class StartKad {
 			System.out.println("entry : "+data);
 			
 			
+			
+			
+			//And shut down..
+			Thread.sleep(2000);
 			kad1.shutdown(false);
 			kad2.shutdown(false);
 			kad3.shutdown(false);
@@ -70,10 +74,7 @@ public class StartKad {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		System.out.println("Finished");
-		
+		}	
 	}
 	
 }
